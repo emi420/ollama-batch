@@ -1,0 +1,1 @@
+Is this recipe a sweet dessert or salty food?. Answer with one word only "sweet" or "salty"
