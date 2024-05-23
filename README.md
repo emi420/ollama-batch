@@ -15,7 +15,7 @@ python ollama-batch.py -d examples/recipes -f examples/sweet_or_salty.txt
 
 1. Install [Ollama](https://ollama.com/download)
 2. Install the Python package `pip install ollama`
-3. Run Ollama `ollama run llama3` or `ollama serve`
+3. Run Ollama `ollama run llama3` / `ollama serve`
 
 
 (c) 2024 Emilio Mariscal
