@@ -44,10 +44,10 @@ def main():
     print("and print the results.")
     print("")
     print("Usage: python ollama-batch.py -d <file> -p <prompt>")
-    print("       python ollama-batch.py -d recipes -p 'Is this recipe a sweet dessert or salty food?'")
+    print("       python ollama-batch.py -d examples/recipes -p 'Is this recipe a sweet dessert or salty food?'")
     print("")
     print("       python ollama-batch.py -d <file> -f <prompt file>")
-    print("       python ollama-batch.py -d recipes -f sweet_or_salty.txt")
+    print("       python ollama-batch.py -d examples/recipes -f examples/sweet_or_salty.txt")
 
 if __name__ == "__main__":
     main()

@@ -8,7 +8,7 @@ This simple script run text prompts over a list of text files and print the resu
 python ollama-batch.py -d <file> -p <prompt>
 python ollama-batch.py -d recipes -p 'Is this recipe a sweet dessert or salty food?'
 python ollama-batch.py -d <file> -f <prompt file>
-python ollama-batch.py -d examples/recipes -f examples/prompts/sweet_or_salty.txt
+python ollama-batch.py -d examples/recipes -f examples/sweet_or_salty.txt
 ```
 
 ## Requirements
