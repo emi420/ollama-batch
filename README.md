@@ -1,6 +1,6 @@
 # Ollama Batch Text Processor
 
-This simple script run text prompts over a list of texts and print the results as JSON. 
+This simple script run text LLM prompts over a list of texts and print the results as JSON. 
 
 ## Usage
 
