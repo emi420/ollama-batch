@@ -5,10 +5,21 @@ This simple script run text prompts over a list of text files and print the resu
 ## Usage
 
 ```bash
-python ollama-batch.py -d <file> -p <prompt>
-python ollama-batch.py -d recipes -p 'Is this recipe a sweet dessert or salty food?'
-python ollama-batch.py -d <file> -f <prompt file>
-python ollama-batch.py -d examples/recipes -f examples/sweet_or_salty.txt
+python ollama-batch.py -d <directory> -p <prompt> 
+python ollama-batch.py -d <directory> --prompt-file <prompt file>
+python ollama-batch.py -f <json_ file> -p <prompt> 
+python ollama-batch.py -f <json file> -p <prompt> --json-property=<json property to analyze>
+python ollama-batch.py -f <json file> -p <prompt> --json-append=<propreties to append>
+```
+
+### Examples
+
+```bash
+python ollama-batch.py -d examples/recipes -p 'Is this recipe a sweet dessert or salty food?'
+python ollama-batch.py -d examples/recipes -p 'Is this recipe a sweet dessert or salty food?' --json-property=ingredients
+python ollama-batch.py -d examples/recipes -p 'Is this recipe a sweet dessert or salty food?' --json-property=title
+python ollama-batch.py -f examples/recipes.json --prompt-file examples/sweet_or_salty.txt
+python ollama-batch.py -f examples/recipes.json --prompt-file examples/sweet_or_salty.txt --json-append=title,url
 ```
 
 ## Requirements
