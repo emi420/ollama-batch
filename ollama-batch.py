@@ -5,7 +5,7 @@ import json
 import sys
 
 # Process files inside a directory
-def processDirectory(question, directory):
+def processDirectory(question, model, directory):
   files = sorted(os.listdir(directory))
   firstLine = True
   for filename in files:
@@ -15,12 +15,12 @@ def processDirectory(question, directory):
         sys.stdout.write(",\n")
       else:
         firstLine = False 
-      jsonObject = answerQuestion(file.read(), question)
+      jsonObject = answerQuestion(file.read(), question, model=model)
       sys.stdout.write(json.dumps(jsonObject, ensure_ascii=False))
       sys.stdout.flush()
 
 # Process a JSON file
-def processJSONFile(question, path, property, json_append):
+def processJSONFile(question, model, path, property, json_append):
     with open(path, 'r', encoding='utf-8') as file:
       jsonObject = json.loads(file.read())
       firstLine = True
@@ -29,7 +29,7 @@ def processJSONFile(question, path, property, json_append):
           sys.stdout.write(",\n")
         else:
           firstLine = False 
-        jsonObject = answerQuestion(item[property], question)
+        jsonObject = answerQuestion(item[property], question, model=model)
         if json_append:
            for prop in json_append:
               jsonObject[prop] = item[prop]
@@ -37,10 +37,10 @@ def processJSONFile(question, path, property, json_append):
         sys.stdout.flush()
 
 # Answer question about content
-def answerQuestion(content, question, questionFirst = False):
+def answerQuestion(content, question, questionFirst = False, model = "llama3"):
   if type(content) == list:
      content = " ".join(content)
-  response = ollama.chat(model='llama3', messages=[
+  response = ollama.chat(model=model, messages=[
     {
       'role': 'user',
       'content':  (content + " \n " + question) if not questionFirst else (question + " \n " + content)
@@ -54,11 +54,14 @@ def main():
     args = argparse.ArgumentParser()
     args.add_argument("--directory", "-d", help="Directory", type=str, default=None)
     args.add_argument("--file", "-f", help="File", type=str, default=None)
+    args.add_argument("--model", "-m", help="Model", type=str, default="llama3")
     args.add_argument("--prompt", "-p", help="Prompt", type=str, default=None)
     args.add_argument("--prompt-file", help="Prompt file", type=str, default=None)
     args.add_argument("--json-property", help="JSON property", type=str, default="content")
     args.add_argument("--json-append", help="Data from original source to append", type=str, default=None)
     args = args.parse_args()
+
+    prompt = None
 
     if args.prompt:
       prompt = args.prompt
@@ -69,18 +72,20 @@ def main():
     if prompt:
       print("[")
       if args.directory:
-          processDirectory(prompt, args.directory)
+          processDirectory(prompt, args.model, args.directory)
           print("\n]\n")
           return
       elif args.file:
           if (args.file[-4:] == "json"):
-            processJSONFile(prompt, args.file, args.json_property, args.json_append.split(",") if args.json_append else None)
+            processJSONFile(prompt, args.model, args.file, args.json_property, args.json_append.split(",") if args.json_append else None)
             print("\n]\n")
             return
 
     print("Ollama Batch Text Processor")
     print("")
     print("This script can run text prompts over a list texts and print the results as JSON.")
+    print("")
+    print("python ollama-batch.py -h prints help")
     print("")
     print("Usage: python ollama-batch.py -d <directory> -p <prompt>")
     print("       python ollama-batch.py -d examples/recipes -p 'Is this recipe a sweet dessert or salty food?' > recipes_result.json")
