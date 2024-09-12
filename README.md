@@ -4,12 +4,32 @@ This simple script run text LLM prompts over a list of texts and print the resul
 
 ## Usage
 
-```bash
-python ollama-batch.py -d <directory> -p <prompt> 
-python ollama-batch.py -d <directory> --prompt-file <prompt file>
-python ollama-batch.py -f <json_ file> -p <prompt> 
-python ollama-batch.py -f <json file> -p <prompt> --json-property=<json property to analyze>
-python ollama-batch.py -f <json file> -p <prompt> --json-append=<propreties to append>
+```sh
+python ollama-batch.py \
+    [--directory DIRECTORY] \
+    [--file FILE] [--model MODEL] \
+    [--prompt PROMPT] \
+    [--prompt-file PROMPT_FILE] \
+    [--json-property JSON_PROPERTY] \
+    [--json-append JSON_APPEND]
+
+options:
+  -h, --help
+            Show this help message and exit
+  --directory DIRECTORY, -d DIRECTORY
+            Directory with files you want to process
+  --file FILE, -f FILE
+            JSON file you want to process
+  --model MODEL, -m MODEL
+            Model you want to use
+  --prompt PROMPT, -p PROMPT
+            Prompt text
+  --prompt-file PROMPT_FILE
+            Text file with a prompt
+  --json-property JSON_PROPERTY
+            JSON property that you want to use
+  --json-append JSON_APPEND
+            Property that you want to append to the results
 ```
 
 ### Examples
@@ -22,11 +42,20 @@ python ollama-batch.py -f examples/recipes.json --prompt-file examples/sweet_or_
 python ollama-batch.py -f examples/recipes.json --prompt-file examples/sweet_or_salty.txt --json-append=title,url
 ```
 
-## Requirements
+## Quick start
+
+### Requirements
 
 1. Install [Ollama](https://ollama.com/download)
 2. Install the Python package `pip install ollama`
-3. Run Ollama `ollama run llama3` / `ollama serve`
+3. Run Ollama `ollama serve`
 
+### Run
+
+```sh
+python ollama-batch.py -d examples/recipes \
+    -p "Is this recipe a sweet dessert or salty food" \
+    > recipes_results.json
+```
 
 (c) 2024 Emilio Mariscal

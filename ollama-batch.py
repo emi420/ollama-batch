@@ -59,13 +59,13 @@ def answerQuestion(content, question, questionFirst = False, model = "llama3"):
 
 def main():
     args = argparse.ArgumentParser()
-    args.add_argument("--directory", "-d", help="Directory", type=str, default=None)
-    args.add_argument("--file", "-f", help="File", type=str, default=None)
-    args.add_argument("--model", "-m", help="Model", type=str, default="llama3")
-    args.add_argument("--prompt", "-p", help="Prompt", type=str, default=None)
-    args.add_argument("--prompt-file", help="Prompt file", type=str, default=None)
-    args.add_argument("--json-property", help="JSON property", type=str, default="content")
-    args.add_argument("--json-append", help="Data from original source to append", type=str, default=None)
+    args.add_argument("--directory", "-d", help="Directory with files you want to process", type=str, default=None)
+    args.add_argument("--file", "-f", help="JSON file you want to process", type=str, default=None)
+    args.add_argument("--model", "-m", help="Model you want to use", type=str, default="llama3")
+    args.add_argument("--prompt", "-p", help="Prompt text", type=str, default=None)
+    args.add_argument("--prompt-file", help="Text file with a prompt", type=str, default=None)
+    args.add_argument("--json-property", help="JSON property that you want to use", type=str, default="content")
+    args.add_argument("--json-append", help="Property that you want to append to the results", type=str, default=None)
     args = args.parse_args()
 
     prompt = None
