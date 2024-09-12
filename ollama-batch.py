@@ -1,3 +1,10 @@
+'''
+    This simple script run text LLM prompts over a list of texts
+    and print the results as JSON. 
+
+    (c) 2024 Emilio Mariscal
+'''
+
 import ollama
 import argparse
 import os
