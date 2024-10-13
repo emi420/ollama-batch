@@ -30,7 +30,6 @@ Potatoes, mayonnaise, salt, black pepper, red onion, eggs
 Is this recipe a sweet dessert or salty food? answer only with a hashtag #sweet or #salty
 ```
 
-
 ## Quick start
 
 ### Install
@@ -80,22 +79,6 @@ ollama-batch -d examples/recipes -p 'Is this recipe a sweet dessert or salty foo
 ollama-batch -d examples/recipes -p 'Is this recipe a sweet dessert or salty food?' --json-property=title
 ollama-batch -f examples/recipes.json --prompt-file examples/sweet_or_salty.txt
 ollama-batch -f examples/recipes.json --prompt-file examples/sweet_or_salty.txt --json-append=title,url
-```
-
-## Quick start
-
-### Requirements
-
-1. Install [Ollama](https://ollama.com/download)
-2. Install the package `pip install ollama`
-3. Run Ollama `ollama serve`
-
-### Run
-
-```sh
-ollama-batch -d examples/recipes \
-    -p "Is this recipe a sweet dessert or salty food" \
-    > recipes_results.json
 ```
 
 (c) 2024 Emilio Mariscal
