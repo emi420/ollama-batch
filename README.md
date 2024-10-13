@@ -13,8 +13,8 @@ For example, if your prompt is:
 
 And your texts are:
 
-`Fruit salad: apple, orange, pear, grape, strawberry, sugar`
-`Potatoes, mayonnaise, salt, black pepper, red onion, eggs`
+1. `Fruit salad: apple, orange, pear, grape, strawberry, sugar`
+2. `Potatoes, mayonnaise, salt, black pepper, red onion, eggs`
 
 It will run:
 
