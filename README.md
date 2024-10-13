@@ -36,7 +36,7 @@ Is this recipe a sweet dessert or salty food? answer only with a hashtag #sweet 
 
 Directly from the main branch:
 
-pip install git+https://github.com/emi420/ollama-batch
+`pip install git+https://github.com/emi420/ollama-batch`
 
 ### Usage
 
