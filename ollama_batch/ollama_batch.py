@@ -12,7 +12,7 @@ import json
 import sys
 
 # Process files inside a directory
-def processDirectory(question, model, directory, questionFirst):
+def processDirectory(question, model, directory, questionFirst, system):
   files = sorted(os.listdir(directory))
   firstLine = True
   for filename in files:
@@ -22,12 +22,12 @@ def processDirectory(question, model, directory, questionFirst):
         sys.stdout.write(",\n")
       else:
         firstLine = False 
-      jsonObject = answerQuestion(file.read(), question, model=model, questionFirst=questionFirst)
+      jsonObject = answerQuestion(file.read(), question, model=model, questionFirst=questionFirst, system=system)
       sys.stdout.write(json.dumps(jsonObject, ensure_ascii=False))
       sys.stdout.flush()
 
 # Process a JSON file
-def processJSONFile(question, model, path, property, json_append, questionFirst):
+def processJSONFile(question, model, path, property, json_append, questionFirst, system):
     with open(path, 'r', encoding='utf-8') as file:
       jsonObject = json.loads(file.read())
       firstLine = True
@@ -36,7 +36,7 @@ def processJSONFile(question, model, path, property, json_append, questionFirst)
           sys.stdout.write(",\n")
         else:
           firstLine = False 
-        jsonObject = answerQuestion(item[property], question, model=model, questionFirst=questionFirst)
+        jsonObject = answerQuestion(item[property], question, model=model, questionFirst=questionFirst, system=system)
         if json_append:
            for prop in json_append:
               jsonObject[prop] = item[prop]
@@ -44,10 +44,10 @@ def processJSONFile(question, model, path, property, json_append, questionFirst)
         sys.stdout.flush()
 
 # Answer question about content
-def answerQuestion(content, question, questionFirst = False, model = "llama3"):
+def answerQuestion(content, question, questionFirst = False, model = "llama3", system = None):
   if type(content) == list:
      content = " ".join(content)
-  response = ollama.chat(model=model, messages=[
+  response = ollama.chat(model=model if not system else "custom", messages=[
     {
       'role': 'user',
       'content':  (content + " \n " + question) if not questionFirst else (question + " \n " + content)
@@ -70,6 +70,9 @@ def main():
                       default=None)
     args.add_argument("--question-first", help="First the question, then the prompt", default=False, 
                       action='store_true')
+    args.add_argument("--system", help="System message", type=str, default=None)
+    args.add_argument("--message-user", help="An example message of what the user could have asked.", type=str, default=None)
+    args.add_argument("--message-assistant", help="An example message of how the model should respond.", type=str, default=None)
     args = args.parse_args()
 
     prompt = None
@@ -81,15 +84,30 @@ def main():
         prompt = f.read()
     
     if prompt:
+
+      modelfile = 'FROM {model}'.format(model=args.model)
+
+      if args.system:
+        modelfile += '\nSYSTEM {system}'.format(system=args.system)
+
+      if args.message_user:
+        modelfile += '\nMESSAGE user {message_user}'.format(message_user=args.message_user)
+
+      if args.message_assistant:
+        modelfile += '\nMESSAGE assistant {message_assistant}'.format(
+           message_assistant=args.message_assistant)
+
+      ollama.create(model='custom', modelfile=modelfile)
+
       print("[")
       if args.directory:
-          processDirectory(prompt, args.model, args.directory, args.question_first)
+          processDirectory(prompt, args.model, args.directory, args.question_first, args.system)
           print("\n]\n")
           return
       elif args.file:
           if (args.file[-4:] == "json"):
             processJSONFile(prompt, args.model, args.file, args.json_property, args.json_append.split(",") 
-                            if args.json_append else None, args.question_first)
+                            if args.json_append else None, args.question_first, args.system)
             print("\n]\n")
             return
 
