@@ -1,6 +1,6 @@
 # Ollama Batch Text Processor
 
-This simple script run text LLM prompts over a list of texts
+This simple utility will run LLM prompts over a list of texts
 and print the results as JSON.
 
 How it works? it contatenates your prompt with each text and call ollama over it.
