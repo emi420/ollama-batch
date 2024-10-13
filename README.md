@@ -41,34 +41,32 @@ Directly from the main branch:
 ### Usage
 
 ```sh
-ollama-batch \
-    [--directory DIRECTORY] \
-    [--file FILE] [--model MODEL] \
-    [--prompt PROMPT] \
-    [--prompt-file PROMPT_FILE] \
-    [--json-property JSON_PROPERTY] \
-    [--json-append JSON_APPEND] \
-    [--question-first]
+usage: ollama-batch [-h] [--directory DIRECTORY] [--file FILE] [--model MODEL] [--prompt PROMPT]
+                       [--prompt-file PROMPT_FILE] [--json-property JSON_PROPERTY] [--json-append JSON_APPEND]
+                       [--question-first] [--system SYSTEM] [--message-user MESSAGE_USER]
+                       [--message-assistant MESSAGE_ASSISTANT]
 
 options:
-  -h, --help
-            Show this help message and exit
+  -h, --help            show this help message and exit
   --directory DIRECTORY, -d DIRECTORY
-            Directory with files you want to process
-  --file FILE, -f FILE
-            JSON file you want to process
+                        Directory with files you want to process
+  --file FILE, -f FILE  JSON file you want to process
   --model MODEL, -m MODEL
-            Model you want to use
+                        Model you want to use
   --prompt PROMPT, -p PROMPT
-            Prompt text
+                        Prompt text
   --prompt-file PROMPT_FILE
-            Text file with a prompt
+                        Text file with a prompt
   --json-property JSON_PROPERTY
-            JSON property that you want to use
+                        JSON property that you want to use
   --json-append JSON_APPEND
-            Property that you want to append to the results
-  --question-first
-            First the question, then the prompt
+                        Property that you want to append to the results
+  --question-first      First the question, then the prompt
+  --system SYSTEM       System message
+  --message-user MESSAGE_USER
+                        An example message of what the user could have asked.
+  --message-assistant MESSAGE_ASSISTANT
+                        An example message of how the model should respond.
 ```
 
 ### Examples

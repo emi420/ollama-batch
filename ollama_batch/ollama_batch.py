@@ -115,18 +115,10 @@ def main():
     print("")
     print("This script can run text prompts over a list texts and print the results as JSON.")
     print("")
-    print("ollama-batch -h prints help")
-    print("")
-    print("Usage: ollama-batch -d <directory> -p <prompt>")
-    print("       ollama-batch -d examples/recipes -p 'Is this recipe a sweet dessert or salty food?' > \
-          recipes_result.json")
-    print("")
-    print("       ollama-batch -f <json file> --prompt-file <prompt file>")
-    print("       ollama-batch -f examples/recipes.json --prompt-file examples/sweet_or_salty.txt")
-    print("       ollama-batch -f examples/recipes.json --prompt-file examples/sweet_or_salty.txt \
-          --json-property=ingredients")
-    print("       ollama-batch -f examples/recipes.json --prompt-file examples/sweet_or_salty.txt \
-          --json-append=title,url")
+    print("Run 'ollama-batch -h' for help")
+
+
+
 
 if __name__ == "__main__":
     main()
