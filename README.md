@@ -67,7 +67,7 @@ options:
             JSON property that you want to use
   --json-append JSON_APPEND
             Property that you want to append to the results
-  --question-first JSON_APPEND
+  --question-first
             First the question, then the prompt
 ```
 
