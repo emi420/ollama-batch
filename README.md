@@ -5,7 +5,7 @@ and print the results as a JSON response.
 
 ### How it works? 
 
-It contatenates your prompt with each text and call ollama over it.
+It contatenates your prompt with each text and call Ollama over it.
 
 For example, if your prompt is:
 
