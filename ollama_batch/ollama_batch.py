@@ -1,6 +1,6 @@
 '''
     This simple script run text LLM prompts over a list of texts
-    and print the results as JSON. 
+    or images and print the results as JSON. 
 
     (c) 2024 Emilio Mariscal
 '''
@@ -12,19 +12,31 @@ import json
 import sys
 
 # Process files inside a directory
-def processDirectory(question, model, directory, questionFirst):
+def processDirectory(question, model, directory, questionFirst, images):
   files = sorted(os.listdir(directory))
   firstLine = True
   for filename in files:
     path = os.path.join(directory, filename)
-    with open(path, 'r', encoding='utf-8') as file:
-      if not firstLine:
-        sys.stdout.write(",\n")
-      else:
-        firstLine = False 
-      jsonObject = answerQuestion(file.read(), question, model=model, questionFirst=questionFirst)
-      sys.stdout.write(json.dumps(jsonObject, ensure_ascii=False))
-      sys.stdout.flush()
+
+    if images:
+        if not firstLine:
+          sys.stdout.write(",\n")
+        else:
+          firstLine = False 
+        jsonObject = answerQuestion(question, model=model, questionFirst=questionFirst, image=path)
+        jsonObject['image'] = path
+        sys.stdout.write(json.dumps(jsonObject, ensure_ascii=False))
+        sys.stdout.flush()
+       
+    else:
+      with open(path, 'r', encoding='utf-8') as file:
+        if not firstLine:
+          sys.stdout.write(",\n")
+        else:
+          firstLine = False 
+        jsonObject = answerQuestion(question, file.read(), model=model, questionFirst=questionFirst)
+        sys.stdout.write(json.dumps(jsonObject, ensure_ascii=False))
+        sys.stdout.flush()
 
 # Process a JSON file
 def processJSONFile(question, model, path, property, json_append, questionFirst):
@@ -36,7 +48,7 @@ def processJSONFile(question, model, path, property, json_append, questionFirst)
           sys.stdout.write(",\n")
         else:
           firstLine = False 
-        jsonObject = answerQuestion(item[property], question, model=model, questionFirst=questionFirst)
+        jsonObject = answerQuestion(question, item[property], model=model, questionFirst=questionFirst)
         if json_append:
            for prop in json_append:
               jsonObject[prop] = item[prop]
@@ -44,15 +56,24 @@ def processJSONFile(question, model, path, property, json_append, questionFirst)
         sys.stdout.flush()
 
 # Answer question about content
-def answerQuestion(content, question, questionFirst = False, model = "llama3"):
+def answerQuestion(question, content = None, questionFirst = False, model = "llama3", image = None):
   if type(content) == list:
      content = " ".join(content)
-  response = ollama.chat(model=model, messages=[
-    {
-      'role': 'user',
-      'content':  (content + " \n " + question) if not questionFirst else (question + " \n " + content)
-    },
-  ])
+  if image:
+    response = ollama.chat(model=model, messages=[
+      {
+        'role': 'user',
+        'content':  question,
+        'images': [image]
+      },
+    ])
+  else:
+    response = ollama.chat(model=model, messages=[
+      {
+        'role': 'user',
+        'content':  (content + " \n " + question) if not questionFirst else (question + " \n " + content)
+      },
+    ])
   return {
      'result': response['message']['content'].replace("\n",' ')
   }
@@ -70,6 +91,8 @@ def main():
                       default=None)
     args.add_argument("--question-first", help="First the question, then the prompt", default=False, 
                       action='store_true')
+    args.add_argument("--images", "-i", help="Look for image files", default=False, 
+                      action='store_true')
     args = args.parse_args()
 
     prompt = None
@@ -83,7 +106,7 @@ def main():
     if prompt:
       print("[")
       if args.directory:
-          processDirectory(prompt, args.model, args.directory, args.question_first)
+          processDirectory(prompt, args.model, args.directory, args.question_first, args.images)
           print("\n]\n")
           return
       elif args.file:
@@ -109,6 +132,7 @@ def main():
           --json-property=ingredients")
     print("       ollama-batch -f examples/recipes.json --prompt-file examples/sweet_or_salty.txt \
           --json-append=title,url")
+    print("       ollama-batch -m llava:13b -d examples/images -i -p 'Describe this image'")
 
 if __name__ == "__main__":
     main()

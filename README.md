@@ -1,9 +1,11 @@
 # Ollama Batch Text Processor
 
 This simple utility will runs LLM prompts over a list of texts
-and print the results as a JSON response.
+or images and print the results as a JSON response.
 
 ### How it works? 
+
+### For texts
 
 It contatenates your prompt with each text and call Ollama over it.
 
@@ -69,6 +71,8 @@ options:
             Property that you want to append to the results
   --question-first
             First the question, then the prompt
+  --images, -i
+            Look for images (use a vision model)
 ```
 
 ### Examples
@@ -79,6 +83,7 @@ ollama-batch -d examples/recipes -p 'Is this recipe a sweet dessert or salty foo
 ollama-batch -d examples/recipes -p 'Is this recipe a sweet dessert or salty food?' --json-property=title
 ollama-batch -f examples/recipes.json --prompt-file examples/sweet_or_salty.txt
 ollama-batch -f examples/recipes.json --prompt-file examples/sweet_or_salty.txt --json-append=title,url
+ollama-batch -d examples/images -i -p 'What do yoy see in this picture?'
 ```
 
 (c) 2024 Emilio Mariscal
