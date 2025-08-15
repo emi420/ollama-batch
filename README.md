@@ -18,7 +18,16 @@ Default model is `gemma3:4b`, but you can use any other model with the `-m <mode
 ### Usage
 
 ```
-ollama-batch -d examples/recipes -p 'Is this recipe a sweet dessert or salty food?'
+ollama-batch -f -f examples/recipes.json -p 'Is this recipe a sweet dessert or salty food?'
+
+[
+{"result": "salty"},
+{"result": "sweet"},
+{"result": "salty"},
+{"result": "sweet"},
+{"result": "sweet"},
+{"result": "sweet"}
+]
 ```
 
 ### Other examples
