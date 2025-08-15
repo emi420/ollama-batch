@@ -13,20 +13,24 @@ Default model is `gemma3:4b`, but you can use any other model with the `-m <mode
 
 ### Install
 
-`pip install ollama-batch`
+```bash
+pip install ollama-batch
+```
 
 ### Usage
 
-```
+```bash
 ollama-batch -f -f examples/recipes.json -p 'Is this recipe a sweet dessert or salty food?'
+```
 
+```json
 [
-{"result": "salty"},
-{"result": "sweet"},
-{"result": "salty"},
-{"result": "sweet"},
-{"result": "sweet"},
-{"result": "sweet"}
+    {"result": "salty"},
+    {"result": "sweet"},
+    {"result": "salty"},
+    {"result": "sweet"},
+    {"result": "sweet"},
+    {"result": "sweet"}
 ]
 ```
 
@@ -42,7 +46,7 @@ ollama-batch -d examples/images -i --prompt-file examples/sweet_or_salty.txt
 
 ### Help
 
-```sh
+```bash
 ollama-batch \
     [--directory DIRECTORY] \
     [--file FILE] [--model MODEL] \
