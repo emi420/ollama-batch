@@ -1,2 +1,6 @@
-ENV
+venv
 .DS_Store
+dist
+.pdm-build
+__pycache__
+*.pyc

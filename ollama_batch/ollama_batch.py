@@ -10,6 +10,24 @@ import argparse
 import os
 import json
 import sys
+import base64
+from PIL import Image
+import io
+
+OPTIONS = {
+  "temperature": 0.0,
+  "top_p": 0.9,
+  "max_new_tokens": 25,
+  "stream": False,
+}
+
+# Downscale and encode images as base64 strings
+def load_image_as_base64(path, max_dim=1024, quality=85):
+    img = Image.open(path)
+    img.thumbnail((max_dim, max_dim), Image.LANCZOS)
+    buf = io.BytesIO()
+    img.save(buf, format="JPEG", quality=quality)
+    return base64.b64encode(buf.getvalue()).decode()
 
 # Process files inside a directory
 def processDirectory(question, model, directory, questionFirst, images):
@@ -17,17 +35,18 @@ def processDirectory(question, model, directory, questionFirst, images):
   firstLine = True
   for filename in files:
     path = os.path.join(directory, filename)
-
     if images:
-        if not firstLine:
-          sys.stdout.write(",\n")
-        else:
-          firstLine = False 
+      if filename.endswith(("png", "jpg", "jpeg")):
         jsonObject = answerQuestion(question, model=model, questionFirst=questionFirst, image=path)
-        jsonObject['image'] = path
-        sys.stdout.write(json.dumps(jsonObject, ensure_ascii=False))
-        sys.stdout.flush()
-       
+        if jsonObject:
+          if not firstLine:
+            sys.stdout.write(",\n")
+          else:
+            firstLine = False 
+          jsonObject['image'] = path
+          sys.stdout.write(json.dumps(jsonObject, ensure_ascii=False))
+          sys.stdout.flush()
+        
     else:
       with open(path, 'r', encoding='utf-8') as file:
         if not firstLine:
@@ -35,6 +54,7 @@ def processDirectory(question, model, directory, questionFirst, images):
         else:
           firstLine = False 
         jsonObject = answerQuestion(question, file.read(), model=model, questionFirst=questionFirst)
+        jsonObject['path'] = path
         sys.stdout.write(json.dumps(jsonObject, ensure_ascii=False))
         sys.stdout.flush()
 
@@ -56,34 +76,46 @@ def processJSONFile(question, model, path, property, json_append, questionFirst)
         sys.stdout.flush()
 
 # Answer question about content
-def answerQuestion(question, content = None, questionFirst = False, model = "llama3", image = None):
+def answerQuestion(question, content = None, questionFirst = False, model = "gemma3:4b", image = None):
   if type(content) == list:
      content = " ".join(content)
+  response = None
   if image:
-    response = ollama.chat(model=model, messages=[
-      {
-        'role': 'user',
-        'content':  question,
-        'images': [image]
-      },
-    ])
+    try:
+      image_b64 = load_image_as_base64(image)
+      response = ollama.chat(model=model, 
+        messages=[
+          {
+            'role': 'user',
+            'content':  question,
+            'images': [image_b64]
+          },
+        ],
+        options=OPTIONS,
+      )
+    except Exception as e:
+      pass
   else:
-    response = ollama.chat(model=model, messages=[
-      {
-        'role': 'user',
-        'content':  (content + " \n " + question) if not questionFirst else (question + " \n " + content)
-      },
-    ])
-  return {
-     'result': response['message']['content'].replace("\n",' ')
-  }
+    response = ollama.chat(model=model,
+      messages=[
+        {
+          'role': 'user',
+          'content':  (content + " \n " + question) if not questionFirst else (question + " \n " + content)
+        },
+      ],
+      options=OPTIONS,
+    )
+  if response:
+    return {
+      'result': response['message']['content'].replace("\n",' ').lower()
+    }
 
 def main():
     args = argparse.ArgumentParser()
     args.add_argument("--directory", "-d", help="Directory with files you want to process", type=str, 
                       default=None)
     args.add_argument("--file", "-f", help="JSON file you want to process", type=str, default=None)
-    args.add_argument("--model", "-m", help="Model you want to use", type=str, default="llama3")
+    args.add_argument("--model", "-m", help="Model you want to use", type=str, default="gemma3:4b")
     args.add_argument("--prompt", "-p", help="Prompt text", type=str, default=None)
     args.add_argument("--prompt-file", help="Text file with a prompt", type=str, default=None)
     args.add_argument("--json-property", help="JSON property that you want to use", type=str, default="content")
@@ -118,7 +150,7 @@ def main():
 
     print("Ollama Batch Text Processor")
     print("")
-    print("This script can run text prompts over a list texts and print the results as JSON.")
+    print("This script can run text prompts over a list texts or images and print the results as JSON.")
     print("")
     print("ollama-batch -h prints help")
     print("")

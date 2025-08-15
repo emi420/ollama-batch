@@ -1,3 +1,3 @@
-__version__ = '0.0.1'
+__version__ = '0.1.2'
 __author__ = 'Emilio Mariscal'
-__licence__ = 'MIT'
+__licence__ = 'AGPL'

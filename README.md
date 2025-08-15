@@ -1,46 +1,37 @@
-# Ollama Batch Text Processor
+# Ollama Batch Classification Tool
 
 This simple utility will runs LLM prompts over a list of texts
-or images and print the results as a JSON response.
-
-### How it works? 
-
-### For texts
-
-It contatenates your prompt with each text and call Ollama over it.
-
-For example, if your prompt is:
-
-`Is this recipe a sweet dessert or salty food? answer only with a hashtag #sweet or #salty`
-
-And your texts are:
-
-1. `Fruit salad: apple, orange, pear, grape, strawberry, sugar`
-2. `Potatoes, mayonnaise, salt, black pepper, red onion, eggs`
-
-It will run:
-
-```
-Fruit salad: apple, orange, pear, grape, strawberry, sugar
-
-Is this recipe a sweet dessert or salty food? answer only with a hashtag #sweet or #salty
-```
-
-```
-Potatoes, mayonnaise, salt, black pepper, red onion, eggs
-
-Is this recipe a sweet dessert or salty food? answer only with a hashtag #sweet or #salty
-```
+or images for classify them, printing the results as a JSON response.
 
 ## Quick start
 
+### Requirements
+
+You'll need Ollama installed in your system.
+
+Default model is `gemma3:4b`, but you can use any other model with the `-m <model>` parameter.
+
 ### Install
 
-Directly from the main branch:
-
-`pip install git+https://github.com/emi420/ollama-batch`
+`pip install ollama-batch`
 
 ### Usage
+
+```
+ollama-batch -d examples/recipes -p 'Is this recipe a sweet dessert or salty food?'
+```
+
+### Other examples
+
+```bash
+ollama-batch -d examples/recipes -p 'Is this recipe a sweet dessert or salty food?' --json-property=ingredients
+ollama-batch -d examples/recipes -p 'Is this recipe a sweet dessert or salty food?' --json-property=title
+ollama-batch -f examples/recipes.json --prompt-file examples/sweet_or_salty.txt
+ollama-batch -f examples/recipes.json --prompt-file examples/sweet_or_salty.txt --json-append=title,url
+ollama-batch -d examples/images -i --prompt-file examples/sweet_or_salty.txt
+```
+
+### Help
 
 ```sh
 ollama-batch \
@@ -75,15 +66,8 @@ options:
             Look for images (use a vision model)
 ```
 
-### Examples
+### License
 
-```bash
-ollama-batch -d examples/recipes -p 'Is this recipe a sweet dessert or salty food?'
-ollama-batch -d examples/recipes -p 'Is this recipe a sweet dessert or salty food?' --json-property=ingredients
-ollama-batch -d examples/recipes -p 'Is this recipe a sweet dessert or salty food?' --json-property=title
-ollama-batch -f examples/recipes.json --prompt-file examples/sweet_or_salty.txt
-ollama-batch -f examples/recipes.json --prompt-file examples/sweet_or_salty.txt --json-append=title,url
-ollama-batch -d examples/images -i -p 'What do yoy see in this picture?'
-```
+You may use this project under the terms of the GNU Affero General Public License (GNU AGPL) Version 3.
 
 (c) 2024 Emilio Mariscal

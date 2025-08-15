@@ -1,0 +1,9 @@
+[
+{"result": "salty", "image": "examples/images/food.jpg"},
+{"result": "salty", "image": "examples/images/lunch.jpg"},
+{"result": "sweet", "image": "examples/images/pancakes.jpg"},
+{"result": "salty", "image": "examples/images/pizza.jpg"},
+{"result": "sweet", "image": "examples/images/scons.jpg"},
+{"result": "sweet", "image": "examples/images/strawberries.jpg"},
+{"result": "sweet", "image": "examples/images/watermelon.jpg"}
+]
