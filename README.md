@@ -20,7 +20,7 @@ pip install ollama-batch
 ### Usage
 
 ```bash
-ollama-batch -f -f examples/recipes.json -p 'Is this recipe a sweet dessert or salty food?'
+ollama-batch -f examples/recipes.json -p 'Is this recipe a sweet dessert or salty food?'
 ```
 
 ```json
